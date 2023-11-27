@@ -81,8 +81,6 @@ class Aplicacion:
 
         self.factura_boton = tk.Button(ventana, text="Generar Factura", command=self.generar_factura)
         self.factura_boton.pack()
-        self.factura_text = tk.Text(ventana)
-        self.factura_text.pack()
 
         self.salir_boton = tk.Button(ventana, text="Salir", command=ventana.quit)
         self.salir_boton.pack()
@@ -100,15 +98,23 @@ class Aplicacion:
         print(f"Producto {producto_aleatorio.nombre} comprado por el cliente {self.cliente.nombre}")
 
     def generar_factura(self):
-        print(f"Factura para el cliente {self.cliente.nombre} (ID: {self.cliente.id})")
-        print(f"Dirección: {self.cliente.direccion}")
-        print(f"Teléfono: {self.cliente.telefono}")
-        print("\nServicios realizados:")
+        factura = f"Factura para el cliente {self.cliente.nombre} (ID: {self.cliente.id})\n"
+        factura += f"Dirección: {self.cliente.direccion}\n"
+        factura += f"Teléfono: {self.cliente.telefono}\n"
+        factura += "\nServicios realizados:\n"
         for servicio in self.cliente.servicios_realizados:
-            print(f"- {servicio.nombre} ({servicio.descripcion}): {servicio.precio}€")
-        print("\nProductos comprados:")
+            factura += f"- {servicio.nombre} ({servicio.descripcion}): {servicio.precio}€\n"
+        factura += "\nProductos comprados:\n"
         for producto in self.cliente.productos_comprados:
-            print(f"- {producto.nombre} ({producto.descripcion}): {producto.precio}€")
+            factura += f"- {producto.nombre} ({producto.descripcion}): {producto.precio}€\n"
+
+    # Crear una nueva ventana para mostrar la factura
+        factura_ventana = tk.Toplevel(self.ventana)
+        factura_ventana.title("Factura")
+        factura_text = tk.Text(factura_ventana)
+        factura_text.pack()
+        factura_text.insert(tk.END, factura)
+
 
     def crear_cliente(self):
         id_cliente = self.id_entry.get()
