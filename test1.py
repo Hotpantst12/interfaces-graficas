@@ -2,11 +2,12 @@ import tkinter as tk
 import random
 
 class Cliente:
-    def __init__(self, id, nombre, telefono, direccion):
+    def __init__(self, id, nombre, telefono, direccion, peluquero):
         self.id = id
         self.nombre = nombre
         self.telefono = telefono
         self.direccion = direccion
+        self.peluquero = peluquero
         self.servicios_realizados = []
         self.productos_comprados = []
 
@@ -38,10 +39,13 @@ class ProductoBelleza:
 
 # Crear algunos servicios y productos constantes
 servicios = [Servicio("Corte de pelo", "Un corte de pelo básico", 30, 15.0),
-             Servicio("Coloración", "Coloración del cabello", 60, 30.0)]
+             Servicio("Coloración", "Coloración del cabello", 60, 90.0),Servicio("Tratamiento Capilar", "frenar caida del cabello", 90, 60.0)]
 
-productos = [ProductoBelleza(1, "Champú", "Champú para todo tipo de cabello", 10.0),
-             ProductoBelleza(2, "Acondicionador", "Acondicionador para todo tipo de cabello", 10.0)]
+productos = [ProductoBelleza(1, "Champú", "Champú para todo tipo de cabello", 20.0),
+             ProductoBelleza(2, "Acondicionador", "Acondicionador para todo tipo de cabello", 10.0),
+             ProductoBelleza(3, "Mascarilla capilar", "tratamiento 5 en 1", 30.0)]
+peluqueros = [Peluquero(1, "Juan", "Corte de pelo"),
+              Peluquero(2, "Ana", "Coloración")]
 
 class Aplicacion:
     def __init__(self, ventana):
@@ -101,12 +105,20 @@ class Aplicacion:
         factura = f"Factura para el cliente {self.cliente.nombre} (ID: {self.cliente.id})\n"
         factura += f"Dirección: {self.cliente.direccion}\n"
         factura += f"Teléfono: {self.cliente.telefono}\n"
+        factura += f"Peluquero: {self.cliente.peluquero.nombre} (Especialización: {self.cliente.peluquero.especializacion})\n"
         factura += "\nServicios realizados:\n"
+        total_servicios = 0
         for servicio in self.cliente.servicios_realizados:
             factura += f"- {servicio.nombre} ({servicio.descripcion}): {servicio.precio}€\n"
+            total_servicios += servicio.precio
         factura += "\nProductos comprados:\n"
+        total_productos = 0
         for producto in self.cliente.productos_comprados:
             factura += f"- {producto.nombre} ({producto.descripcion}): {producto.precio}€\n"
+            total_productos += producto.precio
+        factura += f"\nTotal servicios: {total_servicios}€"
+        factura += f"\nTotal productos: {total_productos}€"
+        factura += f"\nTotal a pagar: {total_servicios + total_productos}€"
 
         # Crear una nueva ventana para mostrar la factura
         factura_ventana = tk.Toplevel(self.ventana)
@@ -115,14 +127,14 @@ class Aplicacion:
         factura_text = tk.Text(factura_ventana, bg="lightyellow", fg="black")
         factura_text.pack()
         factura_text.insert(tk.END, factura)
-
     def crear_cliente(self):
         id_cliente = self.id_entry.get()
         nombre_cliente = self.nombre_entry.get()
         telefono_cliente = self.telefono_entry.get()
         direccion_cliente = self.direccion_entry.get()
+        peluquero_aleatorio = random.choice(peluqueros)
 
-        self.cliente = Cliente(id_cliente, nombre_cliente, telefono_cliente, direccion_cliente)
+        self.cliente = Cliente(id_cliente, nombre_cliente, telefono_cliente, direccion_cliente, peluquero_aleatorio)
 
 ventana = tk.Tk()
 app = Aplicacion(ventana)
